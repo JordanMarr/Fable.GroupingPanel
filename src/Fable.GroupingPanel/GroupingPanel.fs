@@ -2,30 +2,7 @@
 
 open Fable.React
 open Fable.React.Props
-open Fable.SimpleJson
-
-type private SetState<'T> = 'T -> unit  
-let private useState<'T> (t: unit -> 'T) : ('T * SetState<'T>) = Fable.Core.JsInterop.import "useState" "react"
-let inline private useLocalStorage<'T>(key, initialValue: 'T) =
-    let storedValue, setStoredValue = 
-        useState(fun () ->
-            try
-                let item = Browser.Dom.window.localStorage.getItem(key)
-                if item <> null then Json.parseAs<'T>(item) 
-                else initialValue
-            with ex ->
-                Browser.Dom.console.error(ex.Message)
-                initialValue
-        )
-
-    let setValue value = 
-        try
-            setStoredValue value
-            Browser.Dom.window.localStorage.setItem(key, Json.stringify(value))
-        with ex ->
-            Browser.Dom.console.error(ex.Message)
-
-    storedValue, setValue
+open Fable.GroupingPanel.Hooks
 
 type Props<'T, 'SortKey> = {
     /// A sequence of items in a group.
@@ -78,7 +55,6 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
     let rec renderGroupHierarchy (level: int, items: 'T list) =         
         let grpLvl = props.GroupingLevels.[level]
 
-        //let items = items |> List.sortBy grpLvl.KeySelector
         let items =
             match grpLvl.SortBy with
             | SortDefault -> // Sort by grouping key - asc
@@ -145,11 +121,11 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
                         yield renderGroupHierarchy(level + 1, group)
                     else
                         // Render items
-                        yield fragment [] (
+                        yield 
                             group
                             |> Seq.filter (fun item -> key = grpLvl.KeySelector item)
                             |> Seq.map props.ItemTemplate
-                        )
+                            |> fragment []
 
                 yield footer
             ]
@@ -157,7 +133,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
         |> fragment []
 
     if props.GroupingLevels.Length = 0 then failwith "GroupingPanel must have at least one 'groupBy' defined."
-
+    
     renderGroupHierarchy(0, props.Items |> Seq.toList)
 )
 
