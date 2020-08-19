@@ -75,11 +75,8 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
                 | Collapse b -> b
                 | CollapseIf pred -> pred(groupItems.[0])
 
-        let groupedItems = 
-            items
-            |> List.groupBy grpLvl.KeySelector
-
-        groupedItems
+        items
+        |> List.groupBy grpLvl.KeySelector
         |> List.map (fun (key, group) -> 
 
             let onClick _ = 
@@ -92,10 +89,10 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
                 let chevronRt = icon chevronPathRt
                 let chevronDn = icon chevronPathDn
 
-                span [OnClick onClick; Style[Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock]] [
+                span [OnClick onClick; Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock]] [
                     if getIsCollapsed(key, group)
-                    then span [Style [Width "30px"]; Alt "Expand Group"] [ chevronRt ]
-                    else span [Style [Width "30px"]; Alt "Collapse Group"] [ chevronDn ]
+                    then span [Style [Width "30px"]; Alt "Expand Group"] [chevronRt]
+                    else span [Style [Width "30px"]; Alt "Collapse Group"] [chevronDn]
                 ]
 
             let groupInfo =
