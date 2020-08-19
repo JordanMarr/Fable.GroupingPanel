@@ -41,7 +41,7 @@ let page = React.functionComponent(fun () ->
 Which yields:
 ![Sample Message App](documentation/imgs/MessageApp_Before.png)
 
-Now let's adding some collapsable groups using the `groupingPanel` computation expression:
+Now let's add some collapsable groups using the `groupingPanel` computation expression:
 ```F#
 let page = React.functionComponent(fun () ->     
     container [
