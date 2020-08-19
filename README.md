@@ -154,6 +154,6 @@ Operation | Description | Required
 `groupCollapsed` | A bool that will determine whether the group will be collapsed by default | No
 `groupCollapsedIf` | An expression based on the `for` item that will determine whether a group will be collapsed | No
 `groupSortBy` | An expression based on the `for` item that will sort a group in ascending order | No
-`groupSortBy` | An expression based on the `for` item that will sort a group in descending order | No
+`groupSortByDescending` | An expression based on the `for` item that will sort a group in descending order | No
 `groupColor` | Overrides the bg color - only applies when using the default group header template | No
 `select` | This defines the item template | Yes
