@@ -1,6 +1,12 @@
 # Fable.GroupingPanel
 The `groupingPanel` is a computation expression that helps you to easily group UI data in Fable into one or more collapsible groups.
 
+## Installation
+Get it from NuGet!
+
+[![NuGet version (Fable.GroupingPanel)](https://img.shields.io/nuget/v/Fable.GroupingPanel.svg?style=flat-square)](https://github.com/JordanMarr/Fable.GroupingPanel)
+
+
 ## Message Inbox Example
 
 Imagine you are creating a messaging app that lists messages in the left pane.  
