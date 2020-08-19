@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.2</Version>
     <Authors>Jordan Marr</Authors>
     <Company />
     <RepositoryUrl>https://github.com/JordanMarr/Fable.GroupingPanel</RepositoryUrl>
@@ -13,6 +13,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <!-- Add source files to "fable" folder in Nuget package -->
+  <ItemGroup>
+    <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
+  </ItemGroup>
+    
   <ItemGroup>
     <Compile Include="Hooks.fs" />
     <Compile Include="GroupingPanel.fs" />
