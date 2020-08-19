@@ -1,15 +1,15 @@
 ﻿module internal Hooks
 
 open Fable.SimpleJson
+open Fable.React
 
-type SetState<'T> = 'T -> unit  
-
-let useState<'T> (t: unit -> 'T) : ('T * SetState<'T>) = 
-    Fable.Core.JsInterop.import "useState" "react"
+let useState<'T> (initialState: 'T) : ('T * ('T -> unit)) = 
+    let state = HookBindings.Hooks.useState<'T>(initialState)
+    state.current, state.update
 
 let inline useLocalStorage<'T>(key, initialValue: 'T) =
     let storedValue, setStoredValue = 
-        useState(fun () ->
+        useState(
             try
                 let item = Browser.Dom.window.localStorage.getItem(key)
                 if item <> null then Json.parseAs<'T>(item) 

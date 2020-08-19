@@ -49,7 +49,7 @@ and GroupInfo<'T> = {
 let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.Of(fun (props: Props<'T, 'SortKey>) ->
     let collapsed, setCollapsed = 
         match props.LocalStorageKey with
-        | None -> useState(fun () -> Map.empty<string,bool>)
+        | None -> useState(Map.empty<string,bool>)
         | Some key -> useLocalStorage<Map<string, bool>>(key, Map.empty<string,bool>)
 
     let rec renderGroupHierarchy (level: int, items: 'T list) =         
