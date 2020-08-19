@@ -2,7 +2,7 @@
 
 open Fable.React
 open Fable.React.Props
-open Fable.GroupingPanel.Hooks
+open Hooks
 
 type Props<'T, 'SortKey> = {
     /// A sequence of items in a group.

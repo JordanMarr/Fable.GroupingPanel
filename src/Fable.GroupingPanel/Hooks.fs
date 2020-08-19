@@ -1,4 +1,4 @@
-﻿module internal Fable.GroupingPanel.Hooks
+﻿module internal Hooks
 
 open Fable.SimpleJson
 
