@@ -50,7 +50,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
     let collapsed, setCollapsed = 
         match props.LocalStorageKey with
         | None -> useState(Map.empty<string,bool>)
-        | Some key -> useLocalStorage<Map<string, bool>>(key, Map.empty<string,bool>)
+        | Some key -> useLocalStorage(key, Map.empty<string,bool>)
 
     let rec renderGroupHierarchy (level: int, items: 'T list) =         
         let grpLvl = props.GroupingLevels.[level]
