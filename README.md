@@ -1,6 +1,12 @@
 # Fable.GroupingPanel
 The `groupingPanel` is a computation expression that helps you to easily group UI data in Fable into one or more collapsible groups.
 
+## Installation
+Get it from NuGet!
+
+[![NuGet version (Fable.GroupingPanel)](https://img.shields.io/nuget/v/Fable.GroupingPanel.svg?style=flat-square)](https://www.nuget.org/packages/Fable.GroupingPanel/)
+
+
 ## Message Inbox Example
 
 Imagine you are creating a messaging app that lists messages in the left pane.  
@@ -35,7 +41,7 @@ let page = React.functionComponent(fun () ->
 Which yields:
 ![Sample Message App](documentation/imgs/MessageApp_Before.png)
 
-Now let's adding some collapsable groups using the `groupingPanel` computation expression:
+Now let's add some collapsable groups using the `groupingPanel` computation expression:
 ```F#
 let page = React.functionComponent(fun () ->     
     container [
