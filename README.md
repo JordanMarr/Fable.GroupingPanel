@@ -1,5 +1,5 @@
 # Fable.GroupingPanel
-The `groupingPanel` computation expression helps you to easily group UI data in Fable into one or more collapsible groups.
+The `groupingPanel` is a computation expression that helps you to easily group UI data in Fable into one or more collapsible groups.
 
 ## Message Inbox Example
 
@@ -84,9 +84,53 @@ let page = React.functionComponent(fun () ->
 Which yields:
 ![Sample Message App with Grouping](documentation/imgs/MessageApp_After.png)
 
+## Users List Example
+This example uses two levels of grouping. 
+
+**Note that the "grouping modifiers" that are prefixed with `group` (like `groupCollapsedIf`) must be preceded by a `groupBy`.**
+
+```F#
+row [
+    col [
+        table [Class "table mt-4"] [
+            tbody [] [
+                groupingPanel {
+                    for user in filteredUsers() do
+                    groupBy (if user.IsEnabled then "Active Users" else "Disabled Users")
+                    groupCollapsedIf (not user.IsEnabled)
+                    groupBy (sprintf "%s" (Auth.getCompany user.Email))
+                    select (
+                        tr [Key ("usr_" + user.Email)] [
+                            td[Style[LineHeight "30px"; PaddingLeft "50px"]] [
+                                Stack.stack [Stack.Horizontal; Stack.HorizontalAlign SpaceBetween] [
+                                    div [Style[Width "300px"; MarginLeft "10px"]] [str user.Email]
+                                    div [Style[Width "300px"]] [str user.Username]
+                                    let icon = if user.IsEnabled then "CheckboxComposite" else "Checkbox"
+                                    Button.commandBarButton [
+                                        Button.IconProps {| iconName = icon |}
+                                        Button.OnClick (fun _ -> updateUser user { user with IsEnabled = not user.IsEnabled })
+                                        Button.ClassName "p-1"
+                                        Button.Title "Toggle Enabled"
+                                    ] [str "Enabled"]
+                                ]
+                            ]
+                        ]
+                    )
+                } 
+            ]
+        ]
+    ]
+]
+```
+Note that the first group, "Active Users", is initially expanded based on the `groupCollapsedIf` option:
+
+`groupCollapsedIf (not user.IsEnabled)`
+
+![Sample Message App with Grouping](documentation/imgs/Users_TwoGroupings.png)
+
+![Sample Message App with Grouping](documentation/imgs/Users_TwoGroupings_Open.png)
 
 ## Minimum Configuration
-`groupingPanel` requires, at a minimum, the following:
 Operation | Description | Required
 --------- | ----------- | --------
 `for` ___ `in` ___ `do` | Initializes the items | Yes
