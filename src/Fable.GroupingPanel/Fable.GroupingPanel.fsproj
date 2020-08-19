@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <Authors>Jordan Marr</Authors>
+    <Company />
+    <RepositoryUrl>https://github.com/JordanMarr/Fable.GroupingPanel</RepositoryUrl>
+    <PackageTags>fsharp,fable,react,UI</PackageTags>
+    <PackageReleaseNotes>Alpha release</PackageReleaseNotes>
+    <Description>Fable.GroupingPanel is an F# computation expression for Fable.React that helps you to easily group UI data into one or more collapsible groups.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="GroupingPanel.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.React" Version="6.2.0" />
+    <PackageReference Include="Fable.SimpleJson" Version="3.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
