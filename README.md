@@ -4,7 +4,7 @@ The `groupingPanel` is a computation expression that helps you to easily group U
 ## Installation
 Get it from NuGet!
 
-[![NuGet version (Fable.GroupingPanel)](https://img.shields.io/nuget/v/Fable.GroupingPanel.svg?style=flat-square)](https://github.com/JordanMarr/Fable.GroupingPanel)
+[![NuGet version (Fable.GroupingPanel)](https://img.shields.io/nuget/v/Fable.GroupingPanel.svg?style=flat-square)](https://www.nuget.org/packages/Fable.GroupingPanel/)
 
 
 ## Message Inbox Example
