@@ -46,11 +46,22 @@ and GroupInfo<'T> = {
 }
 
 /// Component implementation
-let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.Of(fun (props: Props<'T, 'SortKey>) ->
+let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'SortKey>) =
     let collapsed, setCollapsed = 
         match props.LocalStorageKey with
         | None -> useState(Map.empty<string,bool>)
         | Some key -> useLocalStorage(key, Map.empty<string,bool>)
+            
+    let setIsCollapsed (key, isCollapsed) =
+        setCollapsed(collapsed.Add(key, isCollapsed))
+
+    let getIsCollapsed (uniqueGroupKey, firstItem, grpLvl) =
+        match collapsed.TryFind uniqueGroupKey with
+        | Some b -> b
+        | None -> 
+            match grpLvl.Collapsed with
+            | Collapse b -> b
+            | CollapseIf pred -> pred(firstItem)
 
     let rec renderGroupHierarchy (level: int, items: 'T list) =         
         let grpLvl = props.GroupingLevels.[level]
@@ -64,23 +75,14 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
             | SortDesc selector -> 
                 items |> List.sortByDescending selector
 
-        let setIsCollapsed (key: string, isCollapsed: bool) =
-            setCollapsed(collapsed.Add(key, isCollapsed))
-
-        let getIsCollapsed (uniqueGroupKey: string, groupItems: 'T list) =
-            match collapsed.TryFind uniqueGroupKey with
-            | Some b -> b
-            | None -> 
-                match grpLvl.Collapsed with
-                | Collapse b -> b
-                | CollapseIf pred -> pred(groupItems.[0])
-
         items
         |> List.groupBy grpLvl.KeySelector
         |> List.map (fun (key, group) -> 
 
+            let firstItem = group.[0]
+
             let onClick _ = 
-                setIsCollapsed(key, not (getIsCollapsed(key, group)))
+                setIsCollapsed(key, not (getIsCollapsed(key, firstItem, grpLvl)))
 
             let chevronButton =
                 let chevronPathRt = "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
@@ -90,7 +92,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
                 let chevronDn = icon chevronPathDn
 
                 span [OnClick onClick; Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock]] [
-                    if getIsCollapsed(key, group)
+                    if getIsCollapsed(key, firstItem, grpLvl)
                     then span [Style [Width "30px"]; Alt "Expand Group"] [chevronRt]
                     else span [Style [Width "30px"]; Alt "Collapse Group"] [chevronDn]
                 ]
@@ -98,7 +100,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
             let groupInfo =
                 { GroupKey = key
                   Group = group
-                  FirstItem = group.[0]
+                  FirstItem = firstItem
                   Chevron = chevronButton
                   ToggleOnClick = onClick }
 
@@ -112,7 +114,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
             fragment [FragmentProp.Key key] [
                 yield header
                 
-                if not (getIsCollapsed(key, group)) then                    
+                if not (getIsCollapsed(key, firstItem, grpLvl)) then
                     if props.GroupingLevels.Length > (level + 1) then
                         // Render next group
                         yield renderGroupHierarchy(level + 1, group)
@@ -129,10 +131,9 @@ let private render<'T, 'SortKey when 'SortKey : comparison> = FunctionComponent.
         )
         |> fragment []
 
-    if props.GroupingLevels.Length = 0 then failwith "GroupingPanel must have at least one 'groupBy' defined."
-    
+    if props.GroupingLevels.Length = 0 then failwith "GroupingPanel must have at least one 'groupBy' defined."    
     renderGroupHierarchy(0, props.Items |> Seq.toList)
-)
+
 
 // Creates a memoized _generic_ component (required for proper performance; else component will always re-render).
 // https://github.com/fable-compiler/fable-react/issues/162
