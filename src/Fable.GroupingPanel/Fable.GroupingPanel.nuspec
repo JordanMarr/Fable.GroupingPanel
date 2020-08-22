@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
+    <metadata>
+        <id>Fable.GroupingPanel</id>
+        <version>$version$</version>
+        <authors>Jordan Marr</authors>
+        <description>$description$</description>
+        <language>en-US</language>
+        <projectUrl>https://github.com/JordanMarr/Fable.GroupingPanel</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>fsharp fable react</tags>
+    </metadata>
+	<files>
+		<file src="*.fsproj" target="fable\" />
+		<file src="**\*.fs" target="fable\" exclude="obj\**\*.*" />
+	</files>
+</package>

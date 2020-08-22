@@ -10,14 +10,9 @@
     <PackageReleaseNotes>Alpha release</PackageReleaseNotes>
     <Description>Fable.GroupingPanel is an F# computation expression for Fable.React that helps you to easily group UI data into one or more collapsible groups.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <!-- Add source files to "fable" folder in Nuget package -->
-  <ItemGroup>
-    <Content Include="*.fsproj; **\*.fs" PackagePath="fable\" />
-  </ItemGroup>
-    
   <ItemGroup>
     <Compile Include="Hooks.fs" />
     <Compile Include="GroupingPanel.fs" />
@@ -38,5 +33,9 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)/../tools/nuget pack $(ProjectPath) -Properties Configuration=$(ConfigurationName) -OutputDirectory bin/$(ConfigurationName)" />
+  </Target>
 
 </Project>
