@@ -63,7 +63,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
             | Collapse b -> b
             | CollapseIf pred -> pred(firstItem)
 
-    let rec renderGroupHierarchy (level: int, items: 'T list) =         
+    let rec renderGroups (level: int, aggregateKey: string, items: 'T list) =         
         let grpLvl = props.GroupingLevels.[level]
 
         let items =
@@ -77,12 +77,15 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
 
         items
         |> List.groupBy grpLvl.KeySelector
-        |> List.map (fun (key, group) -> 
-
+        |> List.map (fun (groupKey, group) ->
+            
             let firstItem = group.[0]
 
-            let onClick _ = 
-                setIsCollapsed(key, not (getIsCollapsed(key, firstItem, grpLvl)))
+            let aggregateKey = sprintf "%s > %s" aggregateKey groupKey
+            
+            let onClick (e: Browser.Types.MouseEvent) = 
+                e.stopPropagation()
+                setIsCollapsed(aggregateKey, not (getIsCollapsed(aggregateKey, firstItem, grpLvl)))
 
             let chevronButton =
                 let chevronPathRt = "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
@@ -92,13 +95,13 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
                 let chevronDn = icon chevronPathDn
 
                 span [OnClick onClick; Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock]] [
-                    if getIsCollapsed(key, firstItem, grpLvl)
+                    if getIsCollapsed(aggregateKey, firstItem, grpLvl)
                     then span [Style [Width "30px"]; Alt "Expand Group"] [chevronRt]
                     else span [Style [Width "30px"]; Alt "Collapse Group"] [chevronDn]
                 ]
 
             let groupInfo =
-                { GroupKey = key
+                { GroupKey = groupKey
                   Group = group
                   FirstItem = firstItem
                   Chevron = chevronButton
@@ -111,18 +114,18 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
                 | Some tmpl -> tmpl groupInfo
                 | None -> nothing
 
-            fragment [FragmentProp.Key key] [
+            fragment [FragmentProp.Key aggregateKey] [
                 yield header
                 
-                if not (getIsCollapsed(key, firstItem, grpLvl)) then
+                if not (getIsCollapsed(aggregateKey, firstItem, grpLvl)) then
                     if props.GroupingLevels.Length > (level + 1) then
                         // Render next group
-                        yield renderGroupHierarchy(level + 1, group)
+                        yield renderGroups(level + 1, aggregateKey, group)
                     else
                         // Render items
                         yield 
                             group
-                            |> Seq.filter (fun item -> key = grpLvl.KeySelector item)
+                            |> Seq.filter (fun item -> groupKey = grpLvl.KeySelector item)
                             |> Seq.map props.ItemTemplate
                             |> fragment []
 
@@ -132,7 +135,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
         |> fragment []
 
     if props.GroupingLevels.Length = 0 then failwith "GroupingPanel must have at least one 'groupBy' defined."    
-    renderGroupHierarchy(0, props.Items |> Seq.toList)
+    renderGroups(0, "", props.Items |> Seq.toList)
 
 
 // Creates a memoized _generic_ component (required for proper performance; else component will always re-render).

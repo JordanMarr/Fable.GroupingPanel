@@ -40,9 +40,9 @@ let page = React.functionComponent(fun () ->
                     tbody [] [
                         groupingPanel {
                             for user in getFilteredUsers() do
-                            groupBy (if user.IsEnabled then "Active Users" else "Disabled Users")
+                            groupBy (if user.IsEnabled then "Active Users" else "Inactive Users")
                             groupHeader (fun header ->
-                                tr [Style [Background "#ececec"]] [
+                                tr [Style [Background "#ececec"]; OnClick header.ToggleOnClick] [
                                     td [OnClick header.ToggleOnClick; Style [Width "40px"]] [
                                         header.Chevron
                                     ]
@@ -54,7 +54,7 @@ let page = React.functionComponent(fun () ->
                             groupCollapsedIf (not user.IsEnabled)
                             groupBy (sprintf "%s" (getCompany user))
                             groupHeader (fun header ->
-                                tr [Style [Background "whitesmoke"]] [
+                                tr [Style [Background "whitesmoke"]; OnClick header.ToggleOnClick] [
                                     td [OnClick header.ToggleOnClick] [
                                         header.Chevron
                                     ]
@@ -77,7 +77,7 @@ let page = React.functionComponent(fun () ->
                                             Props.Type "checkbox"
                                             Style [Width "20px"; Height "32px"]
                                             Class B.``form-control`` 
-                                            Checked (user.IsEnabled)
+                                            DefaultChecked (user.IsEnabled)
                                         ]
                                     ]
                                 ]
