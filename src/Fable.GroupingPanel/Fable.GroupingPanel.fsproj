@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.3</Version>
+    <Version>0.2.0</Version>
     <Authors>Jordan Marr</Authors>
     <Company />
     <RepositoryUrl>https://github.com/JordanMarr/Fable.GroupingPanel</RepositoryUrl>
-    <PackageTags>fsharp,fable,react,UI</PackageTags>
-    <PackageReleaseNotes>Alpha release</PackageReleaseNotes>
+    <PackageTags>fsharp fable react UI</PackageTags>
+    <PackageReleaseNotes>Alpha release - bug fixes</PackageReleaseNotes>
     <Description>Fable.GroupingPanel is an F# computation expression for Fable.React that helps you to easily group UI data into one or more collapsible groups.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,8 +34,9 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="$(SolutionDir)/../tools/nuget pack $(ProjectPath) -Properties Configuration=$(ConfigurationName) -OutputDirectory bin/$(ConfigurationName)" />
-  </Target>
-
+  <!-- Add source files to "fable" folder in Nuget package -->
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs" PackagePath="fable\" />
+  </ItemGroup>
+    
 </Project>
