@@ -1,0 +1,42 @@
+{
+    "private": true,
+    "scripts": {
+        "start": "webpack-dev-server",
+        "build": "webpack",
+        "test:live": "webpack-dev-server --config ./webpack.tests.js",
+        "pretest": "fable-splitter --config splitter.tests.js",
+        "test": "mocha ./tests-js"
+    },
+    "dependencies": {
+        "hookrouter": "^1.2.3",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "remotedev": "^0.2.9"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.7.0",
+        "@babel/plugin-transform-runtime": "^7.4.4",
+        "@babel/polyfill": "^7.7.0",
+        "@babel/preset-env": "^7.7.1",
+        "@babel/preset-react": "^7.7.4",
+        "@babel/runtime": "^7.7.1",
+        "babel-loader": "^8.0.5",
+        "copy-webpack-plugin": "^5.1.1",
+        "core-js": "^3.3.6",
+        "css-loader": "^3.2.0",
+        "fable-compiler": "^2.10.1",
+        "fable-loader": "^2.1.9",
+        "fable-splitter": "^2.2.0",
+        "file-loader": "^4.2.0",
+        "html-webpack-plugin": "^3.2.0",
+        "mini-css-extract-plugin": "^0.8.0",
+        "mocha": "^7.2.0",
+        "sass": "^1.23.3",
+        "sass-loader": "^8.0.0",
+        "style-loader": "^1.0.0",
+        "terser": "^4.3.9",
+        "webpack": "^4.39.0",
+        "webpack-cli": "^3.3.10",
+        "webpack-dev-server": "^3.11.0"
+    }
+}

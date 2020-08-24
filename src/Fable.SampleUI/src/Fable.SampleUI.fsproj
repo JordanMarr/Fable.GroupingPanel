@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Css.fs" />
+        <Compile Include="HookRouter.fs" />
+        <Compile Include="MessageInbox.fs" />
+        <Compile Include="App.fs" />
+        <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
+        <PackageReference Include="Fable.Elmish.HMR" Version="4.0.1" />
+        <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
+        <PackageReference Include="Feliz" Version="1.13.0" />
+        <PackageReference Include="Zanaptak.TypedCssClasses" Version="0.4.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Fable.GroupingPanel\Fable.GroupingPanel.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="FSharp.Core" Version="4.7.2" />
+    </ItemGroup>
+</Project>
