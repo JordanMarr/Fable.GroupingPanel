@@ -21,9 +21,29 @@ var CONFIG = {
     outputDir: "./deploy",
     assetsDir: "./public",
     devServerPort: 8080,
+	
     // When using webpack-dev-server, you may need to redirect some calls
     // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
-    devServerProxy: undefined,
+    devServerProxy: {
+		// delegate the requests prefixed with /api/
+		'/api/*': {
+		  target: "https://localhost:59641",
+		  changeOrigin: true,
+		  secure: false // Must be false if localhost uses an invalid certificate
+		},
+		// delegate the requests prefixed with /signin/
+		'/signin': {
+		  target: "https://localhost:59641",
+		  changeOrigin: true,
+		  secure: false
+		},
+		// delegate the requests prefixed with /signout/
+		'/signout': {
+		  target: "https://localhost:59641",
+		  changeOrigin: true,
+		  secure: false
+		}
+	},
     // Use babel-preset-env to generate JS compatible with most-used browsers.
     // More info at https://babeljs.io/docs/en/next/babel-preset-env.html
     babel: {
@@ -67,6 +87,7 @@ module.exports = {
     // to prevent browser caching if code changes
     output: {
         path: resolve(CONFIG.outputDir),
+		publicPath: '/',
         filename: isProduction ? '[name].[hash].js' : '[name].js'
     },
     mode: isProduction ? "production" : "development",
@@ -109,12 +130,14 @@ module.exports = {
             'core-js/es6': 'core-js/es'
         }
     },
-    // Configuration for webpack-dev-server
+	// Configuration for webpack-dev-server
     devServer: {
         publicPath: "/",
+	    historyApiFallback: true,
         contentBase: resolve(CONFIG.assetsDir),
         port: CONFIG.devServerPort,
         proxy: CONFIG.devServerProxy,
+		https: true,
         hot: true,
         inline: true
     },

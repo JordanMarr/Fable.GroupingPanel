@@ -5,7 +5,8 @@
     <ItemGroup>
         <Compile Include="Css.fs" />
         <Compile Include="HookRouter.fs" />
-        <Compile Include="MessageInbox.fs" />
+        <Compile Include="InboxPage.fs" />
+        <Compile Include="UsersPage.fs" />
         <Compile Include="App.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>

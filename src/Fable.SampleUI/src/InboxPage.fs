@@ -1,4 +1,4 @@
-﻿module MessageInbox
+﻿module InboxPage
 
 open Fable
 open Fable.React
