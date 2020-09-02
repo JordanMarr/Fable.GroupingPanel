@@ -104,7 +104,7 @@ row [
                     for user in filteredUsers() do
                     groupBy (if user.IsEnabled then "Active Users" else "Disabled Users")
                     groupCollapsedIf (not user.IsEnabled)
-                    groupBy (sprintf "%s" (Auth.getCompany user.Email))
+                    groupBy (getCompany user.Email)
                     select (
                         tr [Key ("usr_" + user.Email)] [
                             td[Style[LineHeight "30px"; PaddingLeft "50px"]] [
