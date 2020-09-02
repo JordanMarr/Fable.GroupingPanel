@@ -45,6 +45,11 @@ and GroupInfo<'T> = {
     ToggleOnClick: Browser.Types.MouseEvent -> unit
 }
 
+module private Chevron =
+    let icon d = svg [ViewBox "0 0 15 15"; Style [Width "16px"; Margin "2px 8px"; Fill "rgb(63 132 213)"]] [ path [D d] [] ]
+    let right = icon "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
+    let down = icon "M 1.646 4.646 a 0.5 0.5 0 0 1 0.708 0 L 8 10.293 l 5.646 -5.647 a 0.5 0.5 0 0 1 0.708 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 0 l -6 -6 a 0.5 0.5 0 0 1 0 -0.708 Z"
+
 /// Component implementation
 let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'SortKey>) =
     let collapsed, setCollapsed = 
@@ -52,11 +57,11 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
         | None -> useState(Map.empty<string,bool>)
         | Some key -> useLocalStorage(key, Map.empty<string,bool>)
             
-    let setIsCollapsed (key, isCollapsed) =
-        setCollapsed(collapsed.Add(key, isCollapsed))
+    let setIsCollapsed (groupKey, isCollapsed) =
+        setCollapsed(collapsed.Add(groupKey, isCollapsed))
 
-    let getIsCollapsed (uniqueGroupKey, firstItem, grpLvl) =
-        match collapsed.TryFind uniqueGroupKey with
+    let getIsCollapsed (groupKey, firstItem, grpLvl) =
+        match collapsed.TryFind groupKey with
         | Some b -> b
         | None -> 
             match grpLvl.Collapsed with
@@ -68,18 +73,9 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
 
         let items =
             match grpLvl.SortBy with
-            | SortDefault -> // Sort by grouping key - asc
-                items |> List.sortBy grpLvl.KeySelector
-            | SortAsc selector -> 
-                items |> List.sortBy selector
-            | SortDesc selector -> 
-                items |> List.sortByDescending selector
-
-        let chevronPathRt = "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
-        let chevronPathDn = "M 1.646 4.646 a 0.5 0.5 0 0 1 0.708 0 L 8 10.293 l 5.646 -5.647 a 0.5 0.5 0 0 1 0.708 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 0 l -6 -6 a 0.5 0.5 0 0 1 0 -0.708 Z"
-        let icon d = svg [ViewBox "0 0 15 15"; Style [Width "16px"; Margin "2px 8px"; Fill "rgb(63 132 213)"]] [ path [D d] [] ]
-        let chevronRt = icon chevronPathRt
-        let chevronDn = icon chevronPathDn
+            | SortDefault ->        items |> List.sortBy grpLvl.KeySelector
+            | SortAsc selector ->   items |> List.sortBy selector
+            | SortDesc selector ->  items |> List.sortByDescending selector
 
         items
         |> List.groupBy grpLvl.KeySelector
@@ -96,8 +92,8 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
             let chevronButton =
                 let style = Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock; Width "30px"]
                 if getIsCollapsed(aggregateKey, firstItem, grpLvl) 
-                then span [OnClick onClick; Alt "Expand Group"; style] [chevronRt]
-                else span [OnClick onClick; Alt "Collapse Group"; style] [chevronDn]
+                then span [OnClick onClick; Alt "Expand Group"; style] [Chevron.right]
+                else span [OnClick onClick; Alt "Collapse Group"; style] [Chevron.down]
 
             let groupInfo =
                 { GroupKey = groupKey
@@ -170,8 +166,9 @@ type GroupingPanelBuilder() =
         | [] -> failwith "A 'groupBy' clause must be added before a 'group' modifier clause can be used."
         | _ -> (List.last lst), (List.take (lst.Length - 1) lst)
 
+    /// Implements "for" loops.
     member this.For (sequence: seq<'T>, f: 'T -> Props<'T, 'SortKey>) =
-        { def with Items = sequence |> Seq.toList }
+        { def with Items = sequence }
 
     // Default props
     member this.Yield _ =
