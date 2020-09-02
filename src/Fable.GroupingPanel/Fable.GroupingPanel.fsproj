@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Jordan Marr</Authors>
     <Company />
     <RepositoryUrl>https://github.com/JordanMarr/Fable.GroupingPanel</RepositoryUrl>
     <PackageTags>fsharp fable react UI</PackageTags>
-    <PackageReleaseNotes>Alpha release - bug fixes</PackageReleaseNotes>
+    <PackageReleaseNotes>Alpha release - improvements</PackageReleaseNotes>
     <Description>Fable.GroupingPanel is an F# computation expression for Fable.React that helps you to easily group UI data into one or more collapsible groups.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
