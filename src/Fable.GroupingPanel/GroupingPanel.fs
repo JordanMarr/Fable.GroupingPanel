@@ -75,6 +75,12 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
             | SortDesc selector -> 
                 items |> List.sortByDescending selector
 
+        let chevronPathRt = "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
+        let chevronPathDn = "M 1.646 4.646 a 0.5 0.5 0 0 1 0.708 0 L 8 10.293 l 5.646 -5.647 a 0.5 0.5 0 0 1 0.708 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 0 l -6 -6 a 0.5 0.5 0 0 1 0 -0.708 Z"
+        let icon d = svg [ViewBox "0 0 15 15"; Style [Width "16px"; Margin "2px 8px"; Fill "rgb(63 132 213)"]] [ path [D d] [] ]
+        let chevronRt = icon chevronPathRt
+        let chevronDn = icon chevronPathDn
+
         items
         |> List.groupBy grpLvl.KeySelector
         |> List.map (fun (groupKey, group) ->
@@ -88,17 +94,10 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
                 setIsCollapsed(aggregateKey, not (getIsCollapsed(aggregateKey, firstItem, grpLvl)))
 
             let chevronButton =
-                let chevronPathRt = "M 4.646 1.646 a 0.5 0.5 0 0 1 0.708 0 l 6 6 a 0.5 0.5 0 0 1 0 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 -0.708 L 10.293 8 L 4.646 2.354 a 0.5 0.5 0 0 1 0 -0.708 Z"
-                let chevronPathDn = "M 1.646 4.646 a 0.5 0.5 0 0 1 0.708 0 L 8 10.293 l 5.646 -5.647 a 0.5 0.5 0 0 1 0.708 0.708 l -6 6 a 0.5 0.5 0 0 1 -0.708 0 l -6 -6 a 0.5 0.5 0 0 1 0 -0.708 Z"
-                let icon d = svg [ViewBox "0 0 15 15"; Style [Width "16px"; Margin "2px 8px"; Fill "rgb(63 132 213)"]] [ path [D d] [] ]
-                let chevronRt = icon chevronPathRt
-                let chevronDn = icon chevronPathDn
-
-                span [OnClick onClick; Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock]] [
-                    if getIsCollapsed(aggregateKey, firstItem, grpLvl)
-                    then span [Style [Width "30px"]; Alt "Expand Group"] [chevronRt]
-                    else span [Style [Width "30px"]; Alt "Collapse Group"] [chevronDn]
-                ]
+                let style = Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock; Width "30px"]
+                if getIsCollapsed(aggregateKey, firstItem, grpLvl) 
+                then span [OnClick onClick; Alt "Expand Group"; style] [chevronRt]
+                else span [OnClick onClick; Alt "Collapse Group"; style] [chevronDn]
 
             let groupInfo =
                 { GroupKey = groupKey
@@ -171,8 +170,8 @@ type GroupingPanelBuilder() =
         | [] -> failwith "A 'groupBy' clause must be added before a 'group' modifier clause can be used."
         | _ -> (List.last lst), (List.take (lst.Length - 1) lst)
 
-    member this.For (coll, _) = 
-        { def with Items = coll |> Seq.toList }
+    member this.For (sequence: seq<'T>, f: 'T -> Props<'T, 'SortKey>) =
+        { def with Items = sequence |> Seq.toList }
 
     // Default props
     member this.Yield _ =
