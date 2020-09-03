@@ -100,24 +100,36 @@ row [
     col [
         table [Class "table mt-4"] [
             tbody [] [
+                let headerTemplate header = 
+                    tr [Style [Background "#ececec"]; OnClick header.ToggleOnClick] [
+                        td [ColSpan 4] [
+                            header.Chevron
+                            span [] [str (sprintf "%s (%i)" header.GroupKey header.Group.Length)]
+                        ]                                    
+                    ]
+                    
                 groupingPanel {
                     for user in filteredUsers() do
                     groupBy (if user.IsEnabled then "Active Users" else "Disabled Users")
+                    groupHeader headerTemplate
                     groupCollapsedIf (not user.IsEnabled)
                     groupBy (getCompany user.Email)
+                    groupHeader headerTemplate
                     select (
                         tr [Key ("usr_" + user.Email)] [
-                            td[Style[LineHeight "30px"; PaddingLeft "50px"]] [
-                                Stack.stack [Stack.Horizontal; Stack.HorizontalAlign SpaceBetween] [
-                                    div [Style[Width "300px"; MarginLeft "10px"]] [str user.Email]
-                                    div [Style[Width "300px"]] [str user.Username]
-                                    let icon = if user.IsEnabled then "CheckboxComposite" else "Checkbox"
-                                    Button.commandBarButton [
-                                        Button.IconProps {| iconName = icon |}
-                                        Button.OnClick (fun _ -> updateUser user { user with IsEnabled = not user.IsEnabled })
-                                        Button.ClassName "p-1"
-                                        Button.Title "Toggle Enabled"
-                                    ] [str "Enabled"]
+                            td [] []
+                            td[Style[LineHeight "30px"]] [
+                                str user.Email
+                            ]
+                            td [] [
+                                str user.Username
+                            ]
+                            td [] [
+                                input [
+                                    Props.Type "checkbox"
+                                    Style [Width "20px"; Height "32px"]
+                                    Class B.``form-control`` 
+                                    DefaultChecked (user.IsEnabled)
                                 ]
                             ]
                         ]
