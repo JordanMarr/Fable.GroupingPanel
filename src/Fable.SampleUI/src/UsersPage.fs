@@ -38,31 +38,22 @@ let page = React.functionComponent(fun () ->
             div [Class B.col] [
                 table [classes [B.table; B.``mt-4``]] [
                     tbody [] [
+
+                        let headerTemplate header = 
+                            tr [Style [Background "#ececec"]; OnClick header.ToggleOnClick] [
+                                td [ColSpan 4] [
+                                    header.Chevron
+                                    span [] [str (sprintf "%s (%i)" header.GroupKey header.Group.Length)]
+                                ]                                    
+                            ]
+
                         groupingPanel {
                             for user in getFilteredUsers() do
                             groupBy (if user.IsEnabled then "Active Users" else "Inactive Users")
-                            groupHeader (fun header ->
-                                tr [Style [Background "#ececec"]; OnClick header.ToggleOnClick] [
-                                    td [OnClick header.ToggleOnClick; Style [Width "40px"]] [
-                                        header.Chevron
-                                    ]
-                                    td [ColSpan 3] [
-                                        span [] [str (sprintf "%s (%i)" header.GroupKey header.Group.Length)]
-                                    ]
-                                ]
-                            )
+                            groupHeader headerTemplate
                             groupCollapsedIf (not user.IsEnabled)
-                            groupBy (sprintf "%s" (getCompany user))
-                            groupHeader (fun header ->
-                                tr [Style [Background "whitesmoke"]; OnClick header.ToggleOnClick] [
-                                    td [OnClick header.ToggleOnClick] [
-                                        header.Chevron
-                                    ]
-                                    td [ColSpan 3] [
-                                        span [] [str (sprintf "%s (%i)" header.GroupKey header.Group.Length)]
-                                    ]
-                                ]
-                            )
+                            groupBy (getCompany user)
+                            groupHeader headerTemplate
                             select (
                                 tr [Key ("usr_" + user.Email)] [
                                     td [] []

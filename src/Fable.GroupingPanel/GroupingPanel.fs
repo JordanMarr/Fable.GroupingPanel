@@ -90,7 +90,7 @@ let private render<'T, 'SortKey when 'SortKey : comparison> (props: Props<'T, 'S
                 setIsCollapsed(aggregateKey, not (getIsCollapsed(aggregateKey, firstItem, grpLvl)))
 
             let chevronButton =
-                let style = Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"; Display DisplayOptions.InlineBlock; Width "30px"]
+                let style = Style [Padding "0"; PaddingLeft (25 * level); Cursor "pointer"]
                 if getIsCollapsed(aggregateKey, firstItem, grpLvl) 
                 then span [OnClick onClick; Alt "Expand Group"; style] [Chevron.right]
                 else span [OnClick onClick; Alt "Collapse Group"; style] [Chevron.down]
