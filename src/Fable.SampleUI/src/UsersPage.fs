@@ -33,6 +33,12 @@ let getCompany user =
     | _ -> "Other"
 
 let page = React.functionComponent(fun () -> 
+    let users, setUsers = React.useState([])
+
+    React.useEffectOnce(fun () ->
+        getFilteredUsers() |> setUsers
+    )
+
     div [Class B.container] [
         div [Class B.row] [
             div [Class B.col] [
@@ -48,7 +54,7 @@ let page = React.functionComponent(fun () ->
                             ]
 
                         groupingPanel {
-                            for user in getFilteredUsers() do
+                            for user in users do
                             groupBy (if user.IsEnabled then "Active Users" else "Inactive Users")
                             groupHeader headerTemplate
                             groupCollapsedIf (not user.IsEnabled)
@@ -68,7 +74,14 @@ let page = React.functionComponent(fun () ->
                                             Props.Type "checkbox"
                                             Style [Width "20px"; Height "32px"]
                                             Class B.``form-control`` 
-                                            DefaultChecked (user.IsEnabled)
+                                            Checked (user.IsEnabled)
+                                            OnChange (fun e -> 
+                                                users |> List.map (fun u -> 
+                                                    if u.Email = user.Email
+                                                    then { u with IsEnabled = not u.IsEnabled }
+                                                    else u
+                                                ) |> setUsers
+                                            )
                                         ]
                                     ]
                                 ]
