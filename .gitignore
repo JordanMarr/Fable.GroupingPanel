@@ -286,3 +286,7 @@ __pycache__/
 *.xsd.cs
 
 Browser/service-worker\.d\.ts
+
+**/*.fs.js
+.config/
+**/*fs.txt
